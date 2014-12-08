@@ -19,7 +19,7 @@ processSection = (section, direction, date) ->
   day = date.getDate()
   section_name = direction + ' ' + weekday + ' ' + day
   data = _.map section, (row) ->
-    [row.hour, row.tomtom, row.gmaps]
+    [row.hour, row.tomtom || null, row.gmaps || null]
   data.unshift ['Hour', 'Tomtom', 'Google Maps']
   sections.push { name: section_name, data: data }
 
