@@ -39,6 +39,9 @@ gmaps = (direction) ->
       page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js", ->
         setTimeout ->
           totals = page.evaluate ->
+            inner = $('#altroute_0 .altroute-aux span')
+            if inner.length > 0
+              return inner[inner.length - 1].textContent
             inner = $('#altroute_0 .altroute-info span')
             return inner[inner.length - 1].textContent
 
