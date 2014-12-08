@@ -8,7 +8,7 @@ dateformat = require 'dateformat'
 
 log_filename = 'traffic.csv'
 if !fs.isFile log_filename
-  fs.write log_filename, ['Date', 'Direction', 'TomTom', 'Google Maps'].join(';') + "\n", 'a'
+  fs.write log_filename, ['Full Date', 'Hour', 'Direction', 'TomTom', 'Google Maps'].join(';') + "\n", 'a'
 console.log 'Writing data to ' + log_filename
 
 tomtom = (direction) ->
@@ -65,7 +65,8 @@ queryAll = (direction) ->
     tomtom_time = _.find results, (entry) -> entry.type == 'tomtom'
     gmaps_time = _.find results, (entry) -> entry.type == 'gmaps'
 
-    record = [dateformat(date, 'dd.mm.yyyy HH:MM:ss'), direction, tomtom_time.minutes, gmaps_time.minutes]
+    simpledate = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600
+    record = [dateformat(date, 'dd.mm.yyyy HH:MM:ss Z'), simpledate, direction, tomtom_time.minutes, gmaps_time.minutes]
     fs.write log_filename, record.join(';') + "\n", 'a'
 
 queryAllTimeDependent = ->
