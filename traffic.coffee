@@ -19,14 +19,22 @@ tomtom = (direction) ->
       url = 'http://routes.tomtom.com/#/route/Ernst-Reuter-Platz%2520Charlottenburg%252C%2520Berlin%252C%2520DE%254052.51199%252C13.32183%2540-1/Hermannplatz%2520Kreuzberg%252C%2520Berlin%252C%2520DE%254052.487%252C13.42496%2540-1/?leave=now&traffic=true&center=52.500921648076%2C13.3470075&zoom=11&map=basic'
     page = phantom.create();
     page.open url, ->
-      totals = page.evaluate ->
-        return document.getElementById('routeTotals').textContent
+      page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js", ->
+        setTimeout ->
+          totals = page.evaluate ->
+            return document.getElementById('routeTotals').textContent
 
-      match = totals.match(/-\s+(\d+)\s+min/);
-      if match?
-        resolve(match[1])
-      else
-        resolve(null)
+          match = totals.match(/-\s+(\d+)\s+min/);
+          if match?
+            resolve(match[1])
+          else
+            html = page.evaluate ->
+              document.documentElement.html()
+            fs.write 'tomtom-fail.html', html, 'w'
+            page.render 'tomtom-fail.png'
+            console.error 'Could not get Tomtom traffic data, wrote debug info to tomtom-fail.html/tomtom-fail.png...'
+            resolve(null)
+        , 2000
 
 gmaps = (direction) ->
   new Promise (resolve) ->
@@ -49,6 +57,11 @@ gmaps = (direction) ->
           if match?
             resolve(match[1])
           else
+            html = page.evaluate ->
+              document.documentElement.html()
+            fs.write 'gmaps-fail.html', html, 'w'
+            page.render 'gmaps-fail.png'
+            console.error 'Could not get Google Maps traffic data, wrote debug info to gmaps-fail.html/gmaps-fail.png...'
             resolve(null)
         , 2000
 
