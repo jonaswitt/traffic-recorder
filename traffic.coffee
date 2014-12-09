@@ -34,6 +34,7 @@ tomtom = (direction) ->
             page.render 'tomtom-fail.png'
             console.error 'Could not get Tomtom traffic data, wrote debug info to tomtom-fail.html/tomtom-fail.png...'
             resolve(null)
+          page.close()
         , 2000
 
 gmaps = (direction) ->
@@ -63,6 +64,7 @@ gmaps = (direction) ->
             page.render 'gmaps-fail.png'
             console.error 'Could not get Google Maps traffic data, wrote debug info to gmaps-fail.html/gmaps-fail.png...'
             resolve(null)
+          page.close()
         , 2000
 
 queryAll = (direction) ->
